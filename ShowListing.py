@@ -36,10 +36,7 @@ class Show(object):
 
     @property
     def name(self):
-        if self.match:
-            return self.show
-        else:
-            return self.basename
+        return self.show
 
     @property
     def episode(self):
@@ -55,12 +52,12 @@ class Show(object):
         self.match = m
 
         if m:
-            self.show   = m.group(1).replace(" ", ".").replace("_", ".")
+            self.show   = m.group(1).replace(".", " ").replace("_", " ")
             self.ses    = m.group(3)
             self.ep     = m.group(5)
             self.groups = ", ".join(["(%s)" % x for x in m.groups()])
         else:
-            self.show   = self.basename.replace(" ", ".").replace("_", ".")
+            self.show   = self.basename.replace(".", " ").replace("_", " ")
 
     def processVideoFiles(self):
         """
