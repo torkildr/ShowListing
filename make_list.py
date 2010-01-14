@@ -12,7 +12,11 @@ if __name__ == "__main__" :
             a.add(os.path.join(dirname, subdirname))
 
     for (show, episodes) in a.data.items():
-        print "%s: %d episode(s)" % (show, len(episodes)) 
+        if len(episodes) > 1:
+            print "%s: %d episodes" % (show, len(episodes))
+        else:
+            print show
+        
         for episode in episodes:
             print "  " + str(episode)
 

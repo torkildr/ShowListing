@@ -32,7 +32,7 @@ class Show(object):
         self.processVideoFiles()
 
     def __repr__(self):
-        return "%s (%s) %d" % (self.episode, secondsToReadable(self.time), len(self.files))
+        return "%s (%s) %d file(s)" % (self.episode, secondsToReadable(self.time), len(self.files))
 
     @property
     def name(self):
