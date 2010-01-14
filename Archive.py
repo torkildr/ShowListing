@@ -29,5 +29,9 @@ if __name__ == "__main__" :
     for line in test.split("\n"):
         a.add(line)
 
-    print a.data
+
+    for (show, episodes) in a.data.items():
+        print show
+        for episode in episodes:
+            print "  " + str(episode)
 
