@@ -25,7 +25,8 @@ if __name__ == "__main__" :
     shows.sort()
 
     for show in shows:
-        episodes = a.data[show] 
+        episodes = a.data[show].keys()
+        episodes.sort()
 
         if len(episodes) > 1:
             print "%s: %d episodes" % (show, len(episodes))
@@ -33,10 +34,10 @@ if __name__ == "__main__" :
         else:
             index.write(show + "\n")
         
-        showIndex = open("html/" + episodes.values()[0].dotName + ".html", "w")
+        showIndex = open("html/" + a.data[show].values()[0].dotName + ".html", "w")
 
         for episode in episodes:
-            showIndex.write("  " + str(episode) + "\n")
+            showIndex.write("  " + str(a.data[show][episode]) + "\n")
 
         showIndex.close()
 

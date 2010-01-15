@@ -101,6 +101,7 @@ class Archive(object):
                 s.processVideoFiles()
         else:
             self.data[s.name] = {}
+            s.processVideoFiles()
         
         self.data[s.name][s.episode] = s
 
@@ -108,26 +109,4 @@ class Archive(object):
         for episodes in self.data.values():
             for episode in episodes.values():
                 episode.found = False
-
-# test stuff
-
-test="""/home/shared/done/The.Simpsons.20th.Anniversary.Special.in.3D.On.Ice.REPACK.720p.HDTV.x264-2HD
-/home/shared/done/The.Simpsons.S21E01.720p.HDTV.x264-CTU
-/home/shared/done/Top_Gear.14x05.720p_HDTV_x264-FoV
-/home/shared/done/Top.Gear.S14E06.720p.HDTV.x264-BiA
-/home/shared/done/Top Gear.S14E07.720p.HDTV.x264-BiA
-/home/shared/done/V.2009.S01E01.720p.HDTV.X264-DIMENSION
-/home/shared/done/House.S06E01E02.720p.HDTV.x264-CTU"""
-
-if __name__ == "__main__" :
-    a = Archive()
-
-    for line in test.split("\n"):
-        a.add(line)
-
-
-    for (show, episodes) in a.data.items():
-        print "%s: %d episode(s)" % (show, len(episodes)) 
-        for episode in episodes.values():
-            print "  " + str(episode)
 
