@@ -37,6 +37,10 @@ class Show(object):
     @property
     def name(self):
         return self.show
+    
+    @property
+    def dotName(self):
+        return self.show.replace(" ", ".")
 
     @property
     def episode(self):
@@ -87,10 +91,10 @@ class Archive(object):
     def add(self, path):
         s=Show(path)
         if self.data.has_key(s.name):
-            self.data[s.name].append(s)
+            self.data[s.name][s.episode] = s
         else:
-            self.data[s.name] = []
-            self.data[s.name].append(s)
+            self.data[s.name] = {}
+            self.data[s.name][s.episode] = s
 
 # test stuff
 
