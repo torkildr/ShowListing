@@ -27,9 +27,10 @@ class Show(object):
 
     def __init__(self, path):
         self.path = path
+        self.found = True
         
         self.processPath(os.path.basename(path))
-        self.processVideoFiles()
+        #self.processVideoFiles()
 
     def __repr__(self):
         return "%s (%s) %d file(s)" % (self.episode, secondsToReadable(self.time), len(self.files))
@@ -53,7 +54,11 @@ class Show(object):
         self.basename = basename
         p = re.compile(self.pattern)
         m = p.match(self.basename)
-        self.match = m
+        
+        if m:
+            self.match = True
+        else:
+            self.match = False
 
         if m:
             self.show   = m.group(1).replace(".", " ").replace("_", " ")
@@ -90,11 +95,19 @@ class Archive(object):
 
     def add(self, path):
         s=Show(path)
+
         if self.data.has_key(s.name):
-            self.data[s.name][s.episode] = s
+            if not self.data[s.name].has_key(s.episode):
+                s.processVideoFiles()
         else:
             self.data[s.name] = {}
-            self.data[s.name][s.episode] = s
+        
+        self.data[s.name][s.episode] = s
+
+    def unfind(self):
+        for episodes in self.data.values():
+            for episode in episodes.values():
+                episode.found = False
 
 # test stuff
 
@@ -115,6 +128,6 @@ if __name__ == "__main__" :
 
     for (show, episodes) in a.data.items():
         print "%s: %d episode(s)" % (show, len(episodes)) 
-        for episode in episodes:
+        for episode in episodes.values():
             print "  " + str(episode)
 

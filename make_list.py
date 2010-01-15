@@ -7,10 +7,12 @@ from ShowListing import *
 
 if __name__ == "__main__" :
     try:
-        df=open("data.dat")
+        df = open("data.dat")
         a = pickle.load(df)
         df.close()
-    except IOException:
+
+        a.unfind()
+    except IOError:
         a = Archive()
 
     for dirname, dirnames, filenames in os.walk('/home/shared/done'):
@@ -31,7 +33,7 @@ if __name__ == "__main__" :
         else:
             index.write(show + "\n")
         
-        showIndex = open("html/" + episodes[0].dotName + ".html", "w")
+        showIndex = open("html/" + episodes.values()[0].dotName + ".html", "w")
 
         for episode in episodes:
             showIndex.write("  " + str(episode) + "\n")
@@ -40,3 +42,6 @@ if __name__ == "__main__" :
 
     index.close()
 
+    df = open("data.dat", "w")
+    pickle.dump(a, df)
+    df.close()
