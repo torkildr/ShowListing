@@ -10,7 +10,6 @@ if __name__ == "__main__" :
         df = open("data.dat")
         a = pickle.load(df)
         df.close()
-
         a.unfind()
     except IOError:
         a = Archive()
@@ -32,12 +31,17 @@ if __name__ == "__main__" :
             print "%s: %d episodes" % (show, len(episodes))
             index.write("%s: %d episodes\n" % (show, len(episodes)))
         else:
+            print show
             index.write(show + "\n")
         
         showIndex = open("html/" + a.data[show].values()[0].dotName + ".html", "w")
 
         for episode in episodes:
-            showIndex.write("  " + str(a.data[show][episode]) + "\n")
+            if not a.data[show][episode].found:
+                del a.data[show][episode]
+            else:
+                showIndex.write("  " + str(a.data[show][episode]) + "\n")
+                print "  " + str(a.data[show][episode])
 
         showIndex.close()
 

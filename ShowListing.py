@@ -97,12 +97,13 @@ class Archive(object):
         s=Show(path)
 
         if self.data.has_key(s.name):
-            if not self.data[s.name].has_key(s.episode):
-                s.processVideoFiles()
+            if self.data[s.name].has_key(s.episode):
+                self.data[s.name][s.episode].found = True
+                return
         else:
             self.data[s.name] = {}
-            s.processVideoFiles()
         
+        s.processVideoFiles()
         self.data[s.name][s.episode] = s
 
     def unfind(self):
