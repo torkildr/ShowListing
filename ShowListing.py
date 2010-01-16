@@ -98,7 +98,10 @@ class Archive(object):
 
         if self.data.has_key(s.name):
             if self.data[s.name].has_key(s.episode):
-                self.data[s.name][s.episode].found = True
+                if self.data[s.name][s.episode].time > 0:
+                    self.data[s.name][s.episode].found = True
+                else:
+                    self.data[s.name][s.episode].processVideoFiles()
                 return
         else:
             self.data[s.name] = {}
