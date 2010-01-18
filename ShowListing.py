@@ -3,7 +3,7 @@
 import re, os
 from subprocess import Popen, PIPE
 
-urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/shared/done/"
+urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/jukebox/video/"
 
 def readableToSeconds(tup):
     return (int(tup[0])*60*60) + (int(tup[1])*60) + int(tup[2])
