@@ -3,6 +3,8 @@
 import re, os
 from subprocess import Popen, PIPE
 
+urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/shared/done/"
+
 def readableToSeconds(tup):
     return (int(tup[0])*60*60) + (int(tup[1])*60) + int(tup[2])
 
@@ -32,8 +34,8 @@ class Show(object):
         self.processPath(os.path.basename(path))
         #self.processVideoFiles()
 
-    def __repr__(self):
-        return "%s (%s) %d file(s)" % (self.episode, secondsToReadable(self.time), len(self.files))
+    def __str__(self):
+        return "%s (%s) %d file(s)" % (self.episode, self.duration, len(self.files))
 
     @property
     def name(self):
@@ -42,6 +44,24 @@ class Show(object):
     @property
     def dotName(self):
         return self.show.replace(" ", ".")
+
+    @property
+    def url(self):
+        if len(self.files) <= 0:
+            return ""
+        return urlBase + "/".join(self.files[0].split("/")[4:])
+
+    @property
+    def link(self):
+        return "<a href=\"%s\">%s</a>" % (self.url, self.episode)
+
+    @property
+    def showLink(self):
+        return "<a href=\"html/%s.html\">%s</a>" % (self.dotName, self.name)
+
+    @property
+    def duration(self):
+        return secondsToReadable(self.time)
 
     @property
     def episode(self):
@@ -87,6 +107,7 @@ class Show(object):
             if m:
                 self.time += readableToSeconds(m.groups())
                 self.files.append(file)
+                print ".",
     
         
 class Archive(object):
