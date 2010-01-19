@@ -3,7 +3,7 @@
 import re, os
 from subprocess import Popen, PIPE
 
-urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/jukebox/video/"
+urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/autotorrent/video/"
 
 def readableToSeconds(tup):
     return (int(tup[0])*60*60) + (int(tup[1])*60) + int(tup[2])
@@ -46,14 +46,14 @@ class Show(object):
         return self.show.replace(" ", ".")
 
     @property
-    def url(self):
+    def urls(self):
         if len(self.files) <= 0:
-            return ""
-        return urlBase + "/".join(self.files[0].split("/")[4:])
+            return []
+        return [urlBase + "/".join(x.split("/")[4:]) for x in self.files]
 
     @property
     def link(self):
-        return "<a href=\"%s\">%s</a>" % (self.url, self.episode)
+        return "<a href=\"%s.jsp\" vod=\"playlist\">%s</a>" % (self.dotName + "." + self.episode, self.episode)
 
     @property
     def showLink(self):
