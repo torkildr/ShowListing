@@ -11,6 +11,7 @@ body {
 
 td {
     font-size: 140%;
+    color: #888888;
 }
 
 .text {
@@ -19,7 +20,6 @@ td {
 
 .desc {
     text-align: right;
-    color: #888888;
 }
 
 .show1 {

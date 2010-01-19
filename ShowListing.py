@@ -39,11 +39,6 @@ class Show(object):
         return "%s (%s) %d file(s)" % (self.episode, self.duration, len(self.files))
 
     @property
-    def time(self):
-        return time.strftime("%d.%m.%Y", time.localtime(self.mtime))
-
-
-    @property
     def name(self):
         return self.show
     
@@ -59,15 +54,19 @@ class Show(object):
 
     @property
     def link(self):
-        return "<a href=\"jsp/%s.jsp\" vod=\"playlist\">%s</a>" % (self.dotName + "." + self.episode, self.episode)
+        return "<a href=\"jsp/%s.jsp\" vod=\"playlist\">%s</a> - %s" % (self.dotName + "." + self.episode, self.episode, self.date)
 
     @property
     def showLink(self):
         return "<a href=\"html/%s.html\">%s</a>" % (self.dotName, self.name)
 
     @property
+    def date(self):
+        return time.strftime("%d.%m.%Y", time.localtime(self.mtime))
+    
+    @property
     def description(self):
-        return self.duration
+        return self.date
 
     @property
     def duration(self):
