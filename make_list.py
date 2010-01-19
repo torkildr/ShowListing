@@ -67,7 +67,7 @@ if __name__ == "__main__" :
             else:
                 epColor = toggle(epColor)
                 s = a.data[show][episode]
-                showIndex.write(htmlData % (epColor, s.link, s.duration))
+                showIndex.write(htmlData % (epColor, s.link, s.description))
 
                 showJsp   = open(html_path + "jsp/" + ep.dotName + "." + s.episode + ".jsp", "w")
                 for url in s.urls:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re, os
+import stat, time
 from subprocess import Popen, PIPE
 
 urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/autotorrent/video/"
@@ -38,6 +39,11 @@ class Show(object):
         return "%s (%s) %d file(s)" % (self.episode, self.duration, len(self.files))
 
     @property
+    def time(self):
+        return time.strftime("%d.%m.%Y", time.localtime(self.mtime))
+
+
+    @property
     def name(self):
         return self.show
     
@@ -60,8 +66,12 @@ class Show(object):
         return "<a href=\"html/%s.html\">%s</a>" % (self.dotName, self.name)
 
     @property
+    def description(self):
+        return self.duration
+
+    @property
     def duration(self):
-        return secondsToReadable(self.time)
+        return secondsToReadable(self.seconds)
 
     @property
     def episode(self):
@@ -97,15 +107,16 @@ class Show(object):
 
         p = re.compile("video.*(\d+):(\d+):(\d+)")
         
-        self.time = 0
+        self.seconds = 0
         self.files = []
+        self.mtime = os.stat(self.path)[stat.ST_MTIME]
 
         for file in walkDir(self.path, [".avi", ".mkv", ".mpg", ".mpeg"]):
             output = Popen(["/usr/bin/avinfo", file], stdout=PIPE).communicate()[0]
             m = p.match(output.split("\n")[1])
             
             if m:
-                self.time += readableToSeconds(m.groups())
+                self.seconds += readableToSeconds(m.groups())
                 self.files.append(file)
                 print ".",
     
@@ -119,7 +130,7 @@ class Archive(object):
 
         if self.data.has_key(s.name):
             if self.data[s.name].has_key(s.episode):
-                if self.data[s.name][s.episode].time > 0:
+                if self.data[s.name][s.episode].seconds > 0:
                     self.data[s.name][s.episode].found = True
                 else:
                     self.data[s.name][s.episode].processVideoFiles()
