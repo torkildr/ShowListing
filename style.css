@@ -1,0 +1,26 @@
+body {
+    background: #cccccc;
+    color: #222222;
+    font-size: 140%;
+    font-family: arial, verdana;
+}
+
+div {
+    float: left;
+}
+
+div.show {
+    width: 100%;
+    clear: both;
+}
+
+div.link0 {
+    width: 50%;
+    background: #ffffff;
+}
+
+div.link1 {
+    width: 50%;
+    background: #bbbbbb;
+}
+
