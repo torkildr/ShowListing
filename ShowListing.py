@@ -53,7 +53,7 @@ class Show(object):
 
     @property
     def link(self):
-        return "<a href=\"%s.jsp\" vod=\"playlist\">%s</a>" % (self.dotName + "." + self.episode, self.episode)
+        return "<a href=\"jsp/%s.jsp\" vod=\"playlist\">%s</a>" % (self.dotName + "." + self.episode, self.episode)
 
     @property
     def showLink(self):

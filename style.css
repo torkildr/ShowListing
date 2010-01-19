@@ -1,26 +1,36 @@
 body {
-    background: #cccccc;
-    color: #222222;
-    font-size: 140%;
+    background-color: #444444;
     font-family: arial, verdana;
 }
 
-div {
-    float: left;
+#title {
+    font-size: 180%;
+    color: #888888;
+    font-weight: bold;
 }
 
-div.show {
-    width: 100%;
-    clear: both;
+td {
+    font-size: 140%;
 }
 
-div.link0 {
-    width: 50%;
-    background: #ffffff;
+.text {
+    width: 900px;
 }
 
-div.link1 {
-    width: 50%;
-    background: #bbbbbb;
+.desc {
+    text-align: right;
+    color: #888888;
+}
+
+.show1 {
+    background-color: #333333;
+}
+
+.show2 {
+    background-color: #555555;
+}
+
+a {
+    color: #cccccc;
 }
 

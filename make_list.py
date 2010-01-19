@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
 import os
+import urllib
 import pickle
 
 from ShowListing import *
 
 root_path = "/home/shared/torrent_jukebox/"
 
-htmlHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n"
-htmlFoot = "</body>\n</html>\n"
-htmlData = "<div class=\"show\"><div class=\"link%d\">%s</div><div class=\"desc\">%s</div></div>\n"
+htmlHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<table>\n"
+htmlFoot = "</table>\n</body>\n</html>\n"
+htmlData = "<tr class=\"show%d\"><td class=\"text\">%s</td><td class=\"desc\">%s</td></tr>\n"
 
 html_path = root_path + "html/"
 
@@ -37,7 +38,7 @@ if __name__ == "__main__" :
     shows = a.data.keys()
     shows.sort()
 
-    index.write(htmlHead)
+    index.write(htmlHead % "TV Show listing")
 
     showColor = 1
 
@@ -56,7 +57,7 @@ if __name__ == "__main__" :
             index.write(htmlData % (showColor, ep.showLink, ""))
         
         showIndex = open(html_path + ep.dotName + ".html", "w")
-        showIndex.write(htmlHead)
+        showIndex.write(htmlHead % show)
 
         epColor = 1
 
@@ -68,7 +69,7 @@ if __name__ == "__main__" :
                 s = a.data[show][episode]
                 showIndex.write(htmlData % (epColor, s.link, s.duration))
 
-                showJsp   = open(html_path + ep.dotName + "." + s.episode + ".jsp", "w")
+                showJsp   = open(html_path + "jsp/" + ep.dotName + "." + s.episode + ".jsp", "w")
                 for url in s.urls:
                     showJsp.write("%s - %s|0|0|%s|" % (s.name, s.episode, url))
                 showJsp.close()
