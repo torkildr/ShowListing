@@ -74,6 +74,9 @@ if __name__ == "__main__" :
                     showJsp.write("%s - %s|0|0|%s|" % (s.name, s.episode, url))
                 showJsp.close()
 
+        if len(a.data[show]) == 0:
+            del a.data[show]
+
         showIndex.write(htmlFoot)
         showIndex.close()
 

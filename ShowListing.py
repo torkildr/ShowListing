@@ -66,7 +66,7 @@ class Show(object):
     
     @property
     def description(self):
-        return self.date
+        return self.duration
 
     @property
     def duration(self):
