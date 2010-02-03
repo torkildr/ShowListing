@@ -61,6 +61,10 @@ class Show(object):
         return "<a href=\"html/%s.html\">%s</a>" % (self.dotName, self.name)
 
     @property
+    def unixtime(self):
+        return self.mtime
+    
+    @property
     def date(self):
         return time.strftime("%d.%m.%Y", time.localtime(self.mtime))
     

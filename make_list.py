@@ -8,7 +8,8 @@ from ShowListing import *
 
 root_path = "/home/shared/torrent_jukebox/"
 
-htmlHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<table>\n"
+htmlHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<p>\n<a href=\"%s.html\">%s</a>\n</p>\n<table>\n"
+showHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<table>\n"
 htmlFoot = "</table>\n</body>\n</html>\n"
 htmlData = "<tr class=\"show%d\"><td class=\"text\">%s</td><td class=\"desc\">%s</td></tr>\n"
 
@@ -38,36 +39,40 @@ if __name__ == "__main__" :
     shows = a.data.keys()
     shows.sort()
 
-    index.write(htmlHead % "TV Show listing")
+    # we make a different index ordered by mtime later
+    latestShows = []
+
+    index.write(htmlHead % ("TV Show listing (alphabetical)", "latest", "Ordered by date"))
 
     showColor = 1
 
     # ugly, less portable, and probably unsafe
     # ..very fast though
-    os.system("find %s -type f -delete" % html_path)
+    os.system("find %s -type f ! -iname \"*.css\" -delete" % html_path)
 
     for show in shows:
         episodes = a.data[show].keys()
-        episodes.sort()
+        
+        # better this way(tm)
+        episodes.sort(reverse=True)
 
-        ep = a.data[show].values()[0]
+        ep = a.data[show][episodes[0]]
         showColor = toggle(showColor)
+       
+        latestShows.append((ep.unixtime, show, ep.episode))
 
         if len(episodes) > 1:
-            print "%s: %d episodes" % (show, len(episodes))
+            #print "%s: %d episodes" % (show, len(episodes))
             index.write(htmlData % (showColor, ep.showLink, "%d episodes" % len(episodes)))
         else:
-            print show
+            #print show
             index.write(htmlData % (showColor, ep.showLink, ""))
         
         showIndex = open(html_path + ep.dotName + ".html", "w")
 
-        showIndex.write(htmlHead % show)
+        showIndex.write(showHead % show)
 
         epColor = 1
-
-        # better this way(tm)
-        episodes.reverse()
 
         for episode in episodes:
             if not a.data[show][episode].found:
@@ -87,11 +92,36 @@ if __name__ == "__main__" :
 
         showIndex.write(htmlFoot)
         showIndex.close()
-
+   
     index.write(htmlFoot)
     index.close()
 
     df = open(root_path + "data.dat", "w")
     pickle.dump(a, df)
     df.close()
+
+    # hackish, but write the other index thingy
+    
+    showColor = 1
+    latestShows.sort(reverse=True)
+
+    index=open(root_path + "latest.html", "w")
+
+    index.write(htmlHead % ("TV Show listing (latest first)", "index", "Ordered by name"))
+    
+    for (mtime, show, name) in latestShows:
+        episodes = a.data[show].keys()
+        
+        ep = a.data[show].values()[-1]
+        showColor = toggle(showColor)
+       
+        if len(episodes) > 1:
+            print "%s: %d episodes" % (show, len(episodes))
+            index.write(htmlData % (showColor, ep.showLink, "%d episodes" % len(episodes)))
+        else:
+            print show
+            index.write(htmlData % (showColor, ep.showLink, ""))
+
+    index.write(htmlFoot)
+    index.close()
 
