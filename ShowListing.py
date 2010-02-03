@@ -117,7 +117,6 @@ class Show(object):
             if m:
                 self.seconds += readableToSeconds(m.groups())
                 self.files.append(file)
-                print ".",
     
         
 class Archive(object):

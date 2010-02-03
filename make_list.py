@@ -42,6 +42,10 @@ if __name__ == "__main__" :
 
     showColor = 1
 
+    # ugly, less portable, and probably unsafe
+    # ..very fast though
+    os.system("find %s -type f -delete" % html_path)
+
     for show in shows:
         episodes = a.data[show].keys()
         episodes.sort()
@@ -57,6 +61,7 @@ if __name__ == "__main__" :
             index.write(htmlData % (showColor, ep.showLink, ""))
         
         showIndex = open(html_path + ep.dotName + ".html", "w")
+
         showIndex.write(htmlHead % show)
 
         epColor = 1
