@@ -61,6 +61,9 @@ if __name__ == "__main__" :
 
         epColor = 1
 
+        # better this way(tm)
+        episodes.reverse()
+
         for episode in episodes:
             if not a.data[show][episode].found:
                 del a.data[show][episode]
