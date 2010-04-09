@@ -6,14 +6,14 @@ import pickle
 
 from ShowListing import *
 
-root_path = "/home/shared/torrent_jukebox/"
+root_path = "/home/shared/torrent_jukebox"
 
 htmlHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<p>\n<a href=\"%s.html\">%s</a>\n</p>\n<table>\n"
 showHead = "<html>\n<head><title></title><link rel=stylesheet href=\"style.css\" type=\"text/css\" /></head>\n<body>\n<p id=\"title\">%s</p>\n<table>\n"
 htmlFoot = "</table>\n</body>\n</html>\n"
 htmlData = "<tr class=\"show%d\"><td class=\"text\">%s</td><td class=\"desc\">%s</td></tr>\n"
 
-html_path = root_path + "html/"
+html_path = "%s/html" % (root_path)
 
 def toggle(num):
     if num == 0:
@@ -23,18 +23,18 @@ def toggle(num):
 
 if __name__ == "__main__" :
     try:
-        df = open(root_path + "data.dat")
+        df = open("%s/data.dat" % (root_path))
         a = pickle.load(df)
         df.close()
         a.unfind()
     except IOError:
         a = Archive()
 
-    for dirname, dirnames, filenames in os.walk('/home/shared/done'):
+    for dirname, dirnames, filenames in os.walk('%s/video' % (root_path)):
         for subdirname in dirnames:
             a.add(os.path.join(dirname, subdirname))
 
-    index=open(root_path + "index.html", "w")
+    index=open("%s/index.html" % (root_path), "w")
 
     shows = a.data.keys()
     shows.sort()
@@ -59,20 +59,19 @@ if __name__ == "__main__" :
         ep = a.data[show][episodes[0]]
         showColor = toggle(showColor)
        
-        latestShows.append((ep.unixtime, show, ep.episode))
+        latestShows.append((max([x.unixtime for x in a.data[show].values()]), show, ep.episode))
 
         if len(episodes) > 1:
-            #print "%s: %d episodes" % (show, len(episodes))
             index.write(htmlData % (showColor, ep.showLink, "%d episodes" % len(episodes)))
         else:
-            #print show
             index.write(htmlData % (showColor, ep.showLink, ""))
         
-        showIndex = open(html_path + ep.dotName + ".html", "w")
+        showIndex = open("%s/%s.html" % (html_path, ep.dotName), "w")
 
         showIndex.write(showHead % show)
 
         epColor = 1
+        infoCount = 0
 
         for episode in episodes:
             if not a.data[show][episode].found:
@@ -82,13 +81,17 @@ if __name__ == "__main__" :
                 s = a.data[show][episode]
                 showIndex.write(htmlData % (epColor, s.link, s.description))
 
-                showJsp   = open(html_path + "jsp/" + ep.dotName + "." + s.episode + ".jsp", "w")
+                showJsp   = open("%s/jsp/%s.%s.jsp" % (html_path, ep.dotName, s.episode), "w")
                 for url in s.urls:
                     showJsp.write("%s - %s|0|0|%s|" % (s.name, s.episode, url))
                 showJsp.close()
 
+                infoCount += 1
+
         if len(a.data[show]) == 0:
             del a.data[show]
+        
+        print "%s: %d episodes" % (show, infoCount)
 
         showIndex.write(htmlFoot)
         showIndex.close()
@@ -96,7 +99,7 @@ if __name__ == "__main__" :
     index.write(htmlFoot)
     index.close()
 
-    df = open(root_path + "data.dat", "w")
+    df = open("%s/data.dat" % (root_path), "w")
     pickle.dump(a, df)
     df.close()
 
@@ -105,21 +108,22 @@ if __name__ == "__main__" :
     showColor = 1
     latestShows.sort(reverse=True)
 
-    index=open(root_path + "latest.html", "w")
+    index=open("%s/latest.html" % (root_path), "w")
 
     index.write(htmlHead % ("TV Show listing (latest first)", "index", "Ordered by name"))
     
     for (mtime, show, name) in latestShows:
+        if not a.data.has_key(show):
+            continue
+
         episodes = a.data[show].keys()
         
         ep = a.data[show].values()[-1]
         showColor = toggle(showColor)
        
         if len(episodes) > 1:
-            print "%s: %d episodes" % (show, len(episodes))
             index.write(htmlData % (showColor, ep.showLink, "%d episodes" % len(episodes)))
         else:
-            print show
             index.write(htmlData % (showColor, ep.showLink, ""))
 
     index.write(htmlFoot)

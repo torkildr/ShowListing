@@ -4,7 +4,8 @@ import re, os
 import stat, time
 from subprocess import Popen, PIPE
 
-urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/autotorrent/video/"
+urlBase = "file:///opt/sybhttpd/localhost.drives/NETWORK_SHARE/autotorrent"
+root_path = "/home/shared/torrent_jukebox"
 
 def readableToSeconds(tup):
     return (int(tup[0])*60*60) + (int(tup[1])*60) + int(tup[2])
@@ -50,7 +51,7 @@ class Show(object):
     def urls(self):
         if len(self.files) <= 0:
             return []
-        return [urlBase + "/".join(x.split("/")[4:]) for x in self.files]
+        return [urlBase + x[len(root_path):] for x in self.files]
 
     @property
     def link(self):
@@ -131,8 +132,14 @@ class Archive(object):
         s=Show(path)
 
         if self.data.has_key(s.name):
+            # make sure show listing exists
             if self.data[s.name].has_key(s.episode):
+                # make sure that file we have cached has some actual data
                 if self.data[s.name][s.episode].seconds > 0:
+                    # check if all the files still exist
+                    for file in self.data[s.name][s.episode].files:
+                        if not os.path.exists(os.path.join(root_path, file)):
+                            return
                     self.data[s.name][s.episode].found = True
                 else:
                     self.data[s.name][s.episode].processVideoFiles()
